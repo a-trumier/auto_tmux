@@ -9,9 +9,9 @@ not attached.
 ## Usage
 
 Simply append the following to your .bashrc:
-'''bash
+```bash
 source /path/to/auto_tmux
-'''
+```
 
 ## License
 
