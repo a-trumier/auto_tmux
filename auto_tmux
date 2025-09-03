@@ -1,0 +1,31 @@
+# simple script you can run in your bashrc to automatically connect to a
+# tmux instance on launch of the terminal. If you don't stop the instance,
+# the next terminal will connect to it. If a terminal is already connected, it
+# will create a new instance.
+#
+# Initial revision: September 2nd, 2025
+# Author: Alex Trumier
+# Email: adtrumier@protonmail.com
+
+SESSIONS=$(tmux ls 2>/dev/null)
+NAME="alex"
+
+# TMUX is set when you are inside a tmux session. Since this will be in the
+# bashrc, and will be run on EVERY instance of bash, we need this check
+if [ -z $TMUX ]
+then
+    C=0
+    # find a NON-ATTACHED tmux session that we named
+    while [ $(echo $SESSIONS | grep attached | grep $NAME$C >/dev/null 2>&1; \
+        echo $?) -ne 1 ]
+    do
+        C=$(($C + 1))
+    done
+
+    # now that we have a name, attach to it if it does exist, if not open it
+    if [ $(tmux has-session -t $session >/dev/null 2>&1; echo $?) -ne 0 ]
+    then
+        tmux new -d -s $NAME$C
+    fi
+    tmux attach-session -t $NAME$C
+fi

@@ -1,0 +1,21 @@
+# Kills all tmux sessions that are currently unattached. COULD be run as a 
+# cronjob but might make people unhappy.
+#
+# Initial revision: September 2nd, 2025
+# Author: Alex Trumier
+# Email: adtrumier@protonmail.com
+
+# NOTE: If its a cronjob, put this in root's crontab.
+
+SESSIONS=$(tmux list-sessions)
+
+IFS=$'\n'
+for i in $SESSIONS
+do
+    if [ $(echo $i | grep attached >/dev/null 2>&1; echo $?) -eq 1 ]
+    then
+        CUR_NAME=$(echo $i | cut -d':' -f 1)
+        tmux kill-session -t $CUR_NAME
+        echo "Killed $CUR_NAME"
+    fi
+done
